@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://dtnhq0k0c3ttm"]
+
+[ext_resource type="PackedScene" uid="uid://cqoxci3y33hvw" path="res://levels/objectGen/simpleObjectGen.tscn" id="1_jltpd"]
+[ext_resource type="PackedScene" uid="uid://cpwntutbfv0cd" path="res://levels/basicLevelGen.tscn" id="2_e154n"]
+[ext_resource type="PackedScene" uid="uid://byque4w54oowj" path="res://player/player.tscn" id="3_sr3bf"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_sr3bf"]
+size = Vector3(1, 0.001, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_sr3bf"]
+albedo_color = Color(0, 1, 0.050980393, 1)
+
+[node name="gameNode" type="Node3D" unique_id=996693535]
+
+[node name="spawnedObject" parent="." unique_id=112746693 instance=ExtResource("1_jltpd")]
+visible = false
+
+[node name="levelGen" parent="." unique_id=749077190 instance=ExtResource("2_e154n")]
+
+[node name="player" parent="." unique_id=1479147728 instance=ExtResource("3_sr3bf")]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=193242654]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -5, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=155673846]
+transform = Transform3D(10, 0, 0, 0, 10, 0, 0, 0, 10, 0, -5, 0)
+shape = SubResource("BoxShape3D_sr3bf")
+
+[node name="CSGBox3D" type="CSGBox3D" parent="StaticBody3D/CollisionShape3D" unique_id=9654976]
+gi_lightmap_texel_scale = 1.875
+size = Vector3(10, 1, 10)
+material = SubResource("StandardMaterial3D_sr3bf")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="StaticBody3D/CollisionShape3D/CSGBox3D" unique_id=941267531]
+transform = Transform3D(0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, 3.3159142, 0)

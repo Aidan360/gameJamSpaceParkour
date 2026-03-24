@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://cpwntutbfv0cd"]
+
+[ext_resource type="Script" uid="uid://bn54o7xaeov03" path="res://levels/basic_level_gen.gd" id="1_vrrtp"]
+
+[node name="levelGen" type="Node3D" unique_id=749077190]
+script = ExtResource("1_vrrtp")

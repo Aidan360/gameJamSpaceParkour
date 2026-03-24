@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://cqoxci3y33hvw"]
+
+[ext_resource type="Script" uid="uid://cdwnsiq7rtnvh" path="res://levels/objectGen/simpleObjectGen.gd" id="1_m8n0a"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_m8n0a"]
+
+[node name="spawnedObject" type="Node3D" unique_id=112746693]
+script = ExtResource("1_m8n0a")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="." unique_id=176782992]
+gravity_scale = 0.0
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D" unique_id=169133111]
+shape = SubResource("SphereShape3D_m8n0a")
+
+[node name="CSGSphere3D" type="CSGSphere3D" parent="." unique_id=1205002618]
