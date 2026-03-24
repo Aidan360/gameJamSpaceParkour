@@ -47,6 +47,7 @@ func genPolarVector(offset,radius,height): # FAHHHHH
 	var localZ = randRadius * sin(randTheta)
 	print("x: " + str(localX) + " y:" +str(localY) + " z: " + str(localZ))
 	var localVector = Vector3(localX,localY,localZ)
+	return(localVector)
 	# FUCK I NEED LIENAR ALGEBRA AHHHHHHHHHHHHHHHHHHHHHHHHHHH
 	# uhhh fuck fuck fuck fuck fuck fuck fuck fuck
 	# so first we gotta rotate it along a vector direction??? 
