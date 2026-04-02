@@ -1,4 +1,5 @@
 extends CharacterBody3D
+
 func _physics_process(_delta):
 	move_and_slide()
 	velocity = Vector3(0,0,0)
@@ -9,6 +10,7 @@ func _physics_process(_delta):
 		velocity.z = direction.z * speedMult
 	else:
 		velocity = Vector3(0,0,0)
+	
 	
 #	vel2D = input_direction * speedMult
 	#if Input.is_action_pressed("forward"):
@@ -36,6 +38,9 @@ func _input(event):
 		transform.basis = Basis() # reset rotation
 		rotate_object_local(Vector3(0, 1, 0), rot_x) # first rotate in Y
 		rotate_object_local(Vector3(1, 0, 0), rot_y) # then rotate in X
+	
+	
+		
 	
 	
 	
