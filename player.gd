@@ -1,6 +1,6 @@
 extends RigidBody3D
 
-var sensitivity:=0.001
+var sensitivity:=0.01
 var twist:=0.0
 var pitch:=0.0
 var previous_frame_force=0.0
@@ -23,6 +23,8 @@ func _process(delta: float) -> void:
 	input.z=Input.get_axis("forward", "back")
 	var current_force=$twist_pivot.basis*input*1200*delta
 	var current_raycast=Vector3.ZERO
+	if Input.is_action_just_pressed("reset"):
+		$".".position = Vector3(0,0,0)
 	if Input.is_action_pressed("grapple"):
 		
 		pass

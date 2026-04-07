@@ -44,4 +44,4 @@ func _input(event):
 	
 	
 	
-var speedMult = 10
+var speedMult = 1000
