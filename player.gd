@@ -19,7 +19,7 @@ func _process(delta: float) -> void:
 	var input:=Vector3.ZERO
 	input.x=Input.get_axis("left", "right")
 	if get_contact_count()>0:
-		input.y=Input.get_action_strength("jump")*5
+		input.y=Input.get_action_strength("jump")*10
 	input.z=Input.get_axis("forward", "back")
 	var current_force=$twist_pivot.basis*input*1200*delta
 	var current_raycast=Vector3.ZERO

@@ -15,7 +15,7 @@ func _ready():
 	#generateLevel()
 	#generateObstacle(Vector3(0,0,0),false) 
 	#generateSection(Vector3(0,10,0))
-	generatePath(100,Vector3(20,-10,0),20,5)
+	generatePath(100,Vector3(20,-10,0),1,1,15)
 	
 	#genPolarVector(Vector3(0,1,0),5,10) # cylinder of 5 radius and 10 height
 #generates a level 
@@ -29,7 +29,7 @@ func generateLevel():
 #	pass
 
 
-func generatePath(nodes,location,sectionLength,sectionRadius):	
+func generatePath(nodes,location,sectionLength,sectionRadius,offset):	
 	var pathCoords = []
 	var radialData = []
 	pathCoords.append(location) # remove brackets and 0,0 for v1
@@ -38,7 +38,7 @@ func generatePath(nodes,location,sectionLength,sectionRadius):
 		# offsets
 		#pathCoords.append(pathGenV1(pathCoords[-1],sectionLength)) # pathgen v1 just takes a random angle between pi/3 
 		# for left, right and down 
-		var returnVar = pathGenV2(pathCoords[-1],sectionLength,radialData[-1])
+		var returnVar = pathGenV2(pathCoords[-1],sectionLength,radialData[-1],offset)
 		pathCoords.append(returnVar[0])
 		radialData.append([returnVar[1],returnVar[2]])
 		pass
@@ -73,25 +73,25 @@ func pathGenV1(prevNode,sectionLength):
 		return(Vector3(newX,newY,newZ))
 		
 #pathGen v2 also saves previous angles and iterates off of them
-func pathGenV2(prevNode,sectionLength,lastRad):
+func pathGenV2(prevNode,sectionLength,lastRad,offset):
 		
 		var xO = prevNode[0]
 		var yO = prevNode[1]
 		var zO = prevNode[2]
 		var tO = lastRad[0]
 		var pO = lastRad[1]
-		var r = sectionLength # y is the z cord in calculations
+		var r = sectionLength+offset # y is the z cord in calculations
 		var t = randf_range(-PI/4,PI/4) + tO
 		if t >= PI:
 			t = PI
 		elif t <= -PI:
 			t = -PI
 		#var p = PI/2             PI/2 is flat, 0 is vertical
-		var p = randf_range(-PI/8,PI/8) + pO
+		var p = randf_range(-PI/16,PI/16) + pO
 		if p >= PI/2:
 			p = PI/2
-		elif p <= PI*.25:
-			p = PI*0.25
+		elif p <= PI*.4:
+			p = PI*0.4
 		var newX = r*sin(p)*cos(t) + xO
 		var newY = r*cos(p) + yO
 		var newZ = r*sin(p)*sin(t) + zO
@@ -104,10 +104,10 @@ func generateSection(location,orientation,length,sectionRadius):
 	$".".add_child(newNode)
 	newNode.global_position = Vector3(0,0,0)
 	
-	for item in 8: # 3 checkpoints   wper section?? could be randomized
+	for item in 1: # 3 checkpoints   wper section?? could be randomized
 #		var i = randVector(location,0,50)
 		var i = genPolarVector(sectionRadius,length)
-		var newObj = ObjectSimpleGen(Vector3(3,0.5,4))
+		var newObj = ObjectSimpleGen(Vector3(3,0.25,8))
 		newObj.position = i
 		newNode.add_child(newObj)
 	pass
