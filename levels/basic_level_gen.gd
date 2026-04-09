@@ -15,7 +15,7 @@ func _ready():
 	#generateLevel()
 	#generateObstacle(Vector3(0,0,0),false) 
 	#generateSection(Vector3(0,10,0))
-	generatePath(100,Vector3(20,-10,0),1,1,15)
+	generatePath(100,Vector3(20,-10,0),1,1,25)
 	
 	#genPolarVector(Vector3(0,1,0),5,10) # cylinder of 5 radius and 10 height
 #generates a level 
@@ -81,7 +81,7 @@ func pathGenV2(prevNode,sectionLength,lastRad,offset):
 		var tO = lastRad[0]
 		var pO = lastRad[1]
 		var r = sectionLength+offset # y is the z cord in calculations
-		var t = randf_range(-PI/4,PI/4) + tO
+		var t = randf_range(-PI/8,PI/8) + tO
 		if t >= PI:
 			t = PI
 		elif t <= -PI:
@@ -107,7 +107,7 @@ func generateSection(location,orientation,length,sectionRadius):
 	for item in 1: # 3 checkpoints   wper section?? could be randomized
 #		var i = randVector(location,0,50)
 		var i = genPolarVector(sectionRadius,length)
-		var newObj = ObjectSimpleGen(Vector3(3,0.25,8))
+		var newObj = ObjectSimpleGen(Vector3(3,0.25,12))
 		newObj.position = i
 		newNode.add_child(newObj)
 	pass
