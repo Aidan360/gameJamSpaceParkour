@@ -1,4 +1,5 @@
 extends CharacterBody3D
+
 func _physics_process(_delta):
 	move_and_slide()
 	velocity = Vector3(0,0,0)
@@ -9,6 +10,7 @@ func _physics_process(_delta):
 		velocity.z = direction.z * speedMult
 	else:
 		velocity = Vector3(0,0,0)
+	
 	
 #	vel2D = input_direction * speedMult
 	#if Input.is_action_pressed("forward"):
@@ -38,5 +40,8 @@ func _input(event):
 		rotate_object_local(Vector3(1, 0, 0), rot_y) # then rotate in X
 	
 	
+		
 	
-var speedMult = 10
+	
+	
+var speedMult = 1000

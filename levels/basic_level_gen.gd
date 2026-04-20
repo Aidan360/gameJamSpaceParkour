@@ -5,70 +5,114 @@ extends Node3D
 var levelDat = []
 
 var objectPath = "res://levels/objectGen/simpleObjectGen.tscn"
+var boxPath = "res://levels/objectGen/rectangularPlatform.tscn"
+
+
+var numPer
 
 func _ready():
 	#generateObstacle(Vector3(randi_range(-10,10),randi_range(-10,10),randi_range(-10,10)))
 	#generateLevel()
 	#generateObstacle(Vector3(0,0,0),false) 
 	#generateSection(Vector3(0,10,0))
-	generatePath(2,Vector3(10,0,0),50)
+	generatePath(100,Vector3(20,-10,0),1,1,25)
+	
 	#genPolarVector(Vector3(0,1,0),5,10) # cylinder of 5 radius and 10 height
 #generates a level 
 func generateLevel():
 	for item in 2:
-		var num = item * 30 + 1
-		generatePath(5,Vector3(10,0,0),50)
+		pass
+	#	generatePath(5,Vector3(0,0,0),200,100)
 	#	generateSection(Vector3(0,5,0))
 #	for item in 5:
 #		generateObstacle(Vector3(randi_range(0,10),randi_range(0,10),randi_range(0,10)))
 #	pass
 
 
-func generatePath(nodes,location,sectionLength):	
+func generatePath(nodes,location,sectionLength,sectionRadius,offset):	
 	var pathCoords = []
-	pathCoords.append(location)
+	var radialData = []
+	pathCoords.append(location) # remove brackets and 0,0 for v1
+	radialData.append([0,PI/2])
 	for item in nodes: # generates a series of coordinates first
 		# offsets
-		var xO = pathCoords[-1][0]
-		var yO = pathCoords[-1][1]
-		var zO = pathCoords[-1][2]
-		var sectionRadius = sqrt(3 * pow(sectionLength,2))/2
-		var newX = randi_range(xO - sectionRadius,xO + sectionRadius)
-		var newY = randi_range(yO,yO + sectionRadius)
-		var newZ = randi_range(zO - sectionRadius,zO + sectionRadius)
-		pathCoords.append(Vector3(newX,newY,newZ))
+		#pathCoords.append(pathGenV1(pathCoords[-1],sectionLength)) # pathgen v1 just takes a random angle between pi/3 
+		# for left, right and down 
+		var returnVar = pathGenV2(pathCoords[-1],sectionLength,radialData[-1],offset)
+		pathCoords.append(returnVar[0])
+		radialData.append([returnVar[1],returnVar[2]])
 		pass
-	
+
 	# now actually generating the path
 	for item in pathCoords:
 		var orient
 		if item == pathCoords[-1]: 
-			orient = Vector3(0,0,0)
+			pass
+			#orient = Vector3(0,0,0)
 		else:
 			var num = pathCoords.find(item)
 			print(num)
 			orient = pathCoords[num + 1]
 			print(orient)
-		generateSection(item,orient)
+			generateSection(item,orient,sectionLength,sectionRadius)
+		#	var obj = generateObstacle(item,false)
+		#	$".".add_child(obj)
 		
-
+		
+		
+func pathGenV1(prevNode,sectionLength):
+		var xO = prevNode[0]
+		var yO = prevNode[1]
+		var zO = prevNode[2]
+		var r = sectionLength # y is the z cord in calculations
+		var t = randf_range(-PI/3,PI/3)
+		var p = randf_range(0,PI/3)
+		var newX = r*sin(p)*cos(t) + xO
+		var newZ = r*cos(p) + yO
+		var newY = r*sin(p)*sin(p) + zO
+		return(Vector3(newX,newY,newZ))
+		
+#pathGen v2 also saves previous angles and iterates off of them
+func pathGenV2(prevNode,sectionLength,lastRad,offset):
+		
+		var xO = prevNode[0]
+		var yO = prevNode[1]
+		var zO = prevNode[2]
+		var tO = lastRad[0]
+		var pO = lastRad[1]
+		var r = sectionLength+offset # y is the z cord in calculations
+		var t = randf_range(-PI/8,PI/8) + tO
+		if t >= PI:
+			t = PI
+		elif t <= -PI:
+			t = -PI
+		#var p = PI/2             PI/2 is flat, 0 is vertical
+		var p = randf_range(-PI/16,PI/16) + pO
+		if p >= PI/2:
+			p = PI/2
+		elif p <= PI*.4:
+			p = PI*0.4
+		var newX = r*sin(p)*cos(t) + xO
+		var newY = r*cos(p) + yO
+		var newZ = r*sin(p)*sin(t) + zO
+		return([Vector3(newX,newY,newZ),t,p])
 
 #generates a section with a checkpoint, maybe seperate things via themeing? 
-func generateSection(location,orientation):
-	var newSectionData = []
+func generateSection(location,orientation,length,sectionRadius):
 	#generateObstacle(location,false) 
 	var newNode = Node3D.new()
-	newNode.global_position = Vector3(0,0,0)
 	$".".add_child(newNode)
-	for item in 100: # 3 checkpoints   wper section?? could be randomized
+	newNode.global_position = Vector3(0,0,0)
+	
+	for item in 1: # 3 checkpoints   wper section?? could be randomized
 #		var i = randVector(location,0,50)
-		var i = genPolarVector(1,5,50)
-		var newObj = load(objectPath).instantiate()
+		var i = genPolarVector(sectionRadius,length)
+		var newObj = ObjectSimpleGen(Vector3(3,0.25,12))
 		newObj.position = i
 		newNode.add_child(newObj)
 	pass
 	newNode.position = location
-	newNode.look_at(-orientation,Vector3(0,1,0))
+	newNode.look_at(orientation,Vector3.DOWN)
 func randVector(offset,rangeL,rangeH):
 	var vectorX = randf_range(offset[0] + rangeL, offset[0] + rangeH)
 	var vectorY = randf_range(offset[1] + rangeL, offset[1] + rangeH)
@@ -76,7 +120,7 @@ func randVector(offset,rangeL,rangeH):
 	return(Vector3(vectorX,vectorY,vectorZ))
 
 
-func genPolarVector(offset,radius,height): # FAHHHHH
+func genPolarVector(radius,height): # FAHHHHH
 	# to basically explain, a random polar coordinate is generated within a cylindrical planar system
 	# a random theta value is chosen. 
 	var randTheta = randf_range(0,2*PI)
@@ -87,7 +131,7 @@ func genPolarVector(offset,radius,height): # FAHHHHH
 	#var lZ = 0
 	#var lX = 0
 	#var lY = 1
-	var localVector = Vector3(lX,lY,lZ)
+	var localVector = Vector3(-lX,-lY,-lZ)
 	
 	
 	# code chunk of shame
@@ -151,18 +195,23 @@ func genPolarVector(offset,radius,height): # FAHHHHH
 
 
 
+
+
 	return(localVector)
+func ObjectSimpleGen(size):
+	var obj = load(boxPath).instantiate()
+	obj.setSize(size)
+	return(obj)
 #generates a basic obstacled
-func generateObstacle(loc,randSize):
-	var newObj = load(objectPath).instantiate()
-	newObj.position = loc
-	if randSize == true:
-		var uniform = randf_range(1,1.1)
-		newObj.setSize(Vector3(uniform,uniform,uniform))
-	else:
-		newObj.setSize(Vector3(0.5,0.5,0.5))
-	#levelDat.append(newObj)
-	#$".".add_child(newObj)
-	return newObj
-	pass
+#func generateObstacle(loc,randSize):
+	#var newObj = load(objectPath).instantiate()
+	#newObj.position = loc
+	#if randSize == true:
+		#var uniform = randf_range(1,1.1)
+		#newObj.setSize(Vector3(uniform,uniform,uniform))
+	#else:
+		#newObj.setSize(Vector3(5,5,5))
+	##levelDat.append(newObj)
+	##$".".add_child(newObj)
+	#return newObj
 	
